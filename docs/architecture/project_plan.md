@@ -2,122 +2,104 @@
 
 This implementation plan outlines the major phases and milestones for building the LLM-MCP system, suitable for submission to a GitHub project board as the initial roadmap. It provides actionable guidance for developers implementing each component.
 
+This revised version focuses initially on building a **CLI-only, end-to-end functional flow** where a user can chat with an LLM, which parses the request and dispatches a structured command to an MCP server and returns the result. Web UI/UX elements have been moved to later phases.
+
 ---
 
 ## 🗂️ Implementation Phases
 
-### 🧱 Phase 1: Core Infrastructure
+### 🧱 Phase 1: Core Infrastructure (CLI-based MVP)
 
 * [ ] **Set up project structure**
 
-  * Establish directories for `api/`, `core/`, `mcp_clients/`, `schemas/`, `cli/`, and `web/`
-  * Initialize Git, create `.env.example` for config, and set up dependency managers (`pip`, `npm`)
-* [ ] **FastAPI server**
+  * Create directories for `api/`, `core/`, `mcp_clients/`, `schemas/`, `cli/`
+  * Initialize Git, create `.env.example` for config, and install core dependencies
+* [ ] **FastAPI server setup**
 
-  * Create `main.py` with app factory and router registration
-  * Scaffold basic `/health`, `/chat`, and `/dispatch` endpoints
+  * Create `main.py` with FastAPI app and minimal `/chat` and `/dispatch` routes
+  * Add basic health check endpoint for connectivity
 * [ ] **LLM adapter layer**
 
-  * Create a Python interface (e.g., `LLMClient`) that supports `.query(prompt: str)`
-  * Implement wrappers for OpenAI and Ollama
-* [ ] **Dispatcher for MCP routing**
+  * Create interface `LLMClient` to abstract `.query()`
+  * Implement OpenAI + Ollama adapters
+* [ ] **Intent parser route**
 
-  * Create `dispatcher.py` that maps `action` → `MCP client`
-  * Validate structured command schema and handle errors cleanly
-* [ ] **Mock NetBox MCP client**
+  * Add `/parse-intent` route to accept user messages and return JSON intent
+* [ ] **Dispatcher logic**
 
-  * Create a class with methods like `get_interface_ip(device, interface)` returning static values for now
+  * Route known `action` keys to the appropriate MCP client class
+  * Normalize input validation and MCP result formatting
+* [ ] **Mock NetBox MCP Client**
 
-### 💬 Phase 2: LLM & Intent Handling
+  * Implement simulated logic in `netbox_mcp_client.py` to return fake device/interface info
+* [ ] **Basic CLI tool**
 
-* [ ] **Prompt design**
+  * Build `cli/query.py` that submits user input to backend endpoints and prints the result
 
-  * Define system prompts that ask the LLM to emit structured JSON from user queries
-  * Example: `{ "action": "get_interface_ip", "params": { "device": "R1", "interface": "GigabitEthernet1" } }`
-* [ ] **`/parse-intent` endpoint**
+### 🔗 Phase 2: Real MCP Integration
 
-  * Create endpoint that accepts a user message and returns LLM-emitted JSON
-  * Test LLM edge cases (vague input, incomplete data)
-* [ ] **Validation and schema enforcement**
+* [ ] **NetBox MCP client (real mode)**
 
-  * Define Pydantic schemas for structured intents
-  * Validate incoming LLM outputs against schemas
-* [ ] **CLI wrapper**
+  * Use `httpx` to connect to a real NetBox API instance
+  * Implement device and interface querying functions
+* [ ] **Dispatcher enhancement**
 
-  * Add `query.py` to `cli/` that uses `click` or `argparse` to take user input and send it to the FastAPI server
+  * Route mock/real requests based on environment or CLI flag
+  * Ensure structured responses comply with schema
 
-### 🌐 Phase 3: Web Interface
+### 💬 Phase 3: LLM Prompting + Schema Enforcement
 
-* [ ] **Vue project scaffolding**
+* [ ] **Prompt engineering**
 
-  * Initialize app using Vite + Vue 3 + PrimeVue + Tailwind
-  * Set up layout, router, and component folder structure
-* [ ] **Chat UI component**
+  * Define prompt templates that extract structured commands from user input
+  * Example: `{"action": "get_interface_ip", "params": {"device": "R1", "interface": "GigabitEthernet1"}}`
+* [ ] **Schema validation**
 
-  * Use PrimeVue's chat box or input components
-  * Show user input, LLM response, and optionally structured action preview
-* [ ] **API integration**
+  * Implement Pydantic models to validate all structured outputs from the LLM
+  * Handle fallback and error cases gracefully in the CLI
 
-  * Use Axios to connect frontend to `/chat` and `/parse-intent`
-  * Handle loading states, error messages, and JSON visualization
+### 🌐 Phase 4: Web Interface (Deferred)
 
-### 🔗 Phase 4: MCP Integration
+* [ ] **Vue + PrimeVue setup**
 
-* [ ] **Real NetBox MCP client**
+  * Initialize Vite + Vue 3 project using PrimeVue components
+  * Set up project layout, chat panel, and API binding with Axios
+* [ ] **Chat UI + Response display**
 
-  * Implement REST API calls to NetBox instance using `httpx`
-  * Query interfaces, devices, and site attributes
-* [ ] **Command routing**
+  * Allow users to type questions and view both LLM responses and JSON output from MCP
 
-  * Enhance dispatcher logic to call the real client instead of mock
-  * Ensure robust error handling if MCP is offline or returns errors
-* [ ] **Data transformation**
+### 🎨 Phase 5: UI/UX Enhancements
 
-  * Convert NetBox API response to standard response format (to be sent back to LLM or UI)
+* [ ] **Styling + layout polish**
 
-### 🎨 Phase 5: UI/UX Polish
+  * Use Tailwind CSS and PrimeVue themes for consistent visuals
+* [ ] **Agent/dispatcher status view**
 
-* [ ] **Component styling**
-
-  * Customize PrimeVue components using Tailwind or PrimeFlex
-  * Ensure visual consistency with light/dark modes if needed
-* [ ] **MCP status indicators**
-
-  * Add UI to show available MCP agents and their status
-  * Optionally provide UI to inspect dispatcher routing
-* [ ] **Feedback enhancement**
-
-  * Include structured JSON view alongside conversational response
+  * Show which MCP clients are active/available and display backend logs
 
 ### 🧪 Phase 6: Testing + CI
 
-* [ ] **Unit tests**
+* [ ] **Unit + integration testing**
 
-  * Use `pytest` for LLM adapter, dispatcher, and MCP clients
-  * Mock external APIs and model outputs
-* [ ] **Integration tests**
+  * Test all adapters, dispatchers, and MCP clients using `pytest`
+* [ ] **Docker setup**
 
-  * Validate complete query-to-response loop
-  * Include tests for malformed inputs and agent errors
-* [ ] **Dockerization**
+  * Add `Dockerfile` + `docker-compose.yml` for backend + CLI dev
+* [ ] **GitHub Actions CI**
 
-  * Create `Dockerfile` and `docker-compose.yml` for web + API + MCP testing
-* [ ] **GitHub Actions**
-
-  * Add workflows to lint, test, and build Docker images
+  * Linting, unit tests, and build validation
 
 ### 🚀 Phase 7: Documentation & Release
 
-* [ ] **Developer documentation**
+* [ ] **Developer docs**
 
-  * Describe endpoints, config variables, MCP patterns
-* [ ] **API and schema reference**
+  * Describe CLI usage, routes, config structure, and extension patterns
+* [ ] **Swagger and schema docs**
 
-  * Auto-generate Swagger docs via FastAPI
-* [ ] **Release candidate**
+  * Auto-generate with FastAPI OpenAPI integration
+* [ ] **Initial release package**
 
-  * Create example `.env` file
-  * Add demo query scripts and NetBox sample data
+  * Ship with CLI demo, README, and mock NetBox MCP support
 
 ---
 
@@ -125,4 +107,4 @@ This implementation plan outlines the major phases and milestones for building t
 
 Each phase in this plan should be mapped to a GitHub milestone and tracked as a column or label in the GitHub Project board. Issues should be created per task and linked to milestones to provide visibility and traceability.
 
-Let me know if you'd like assistance creating GitHub issues from this roadmap.
+Let me know when you'd like to generate GitHub issues or restructure the CLI tooling next.

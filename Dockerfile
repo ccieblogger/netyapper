@@ -18,7 +18,7 @@ COPY mcp_clients ./mcp_clients
 COPY cli ./cli
 
 # Install dependencies
-RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false && poetry install --no-root --no-interaction --no-ansi
 
 EXPOSE 8000
 

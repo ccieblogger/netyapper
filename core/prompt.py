@@ -37,7 +37,35 @@ class PromptEngine:
         """
         return self.registry.get_action_schema(action_name)
 
-    # Future methods:
-    # def load_templates(self, registry_path: str): ...
-    # def build_prompt(self, action: str, params: Dict[str, Any], user_input: str) -> str: ...
-    # def example_prompt(self) -> str: ...
+    def build_prompt(self, action: str, params: Dict[str, Any], user_input: str) -> Optional[str]:
+        """
+        Build a prompt string for the LLM by injecting the action, params, and user input into a template.
+        Returns the constructed prompt, or None if the action is not found.
+        """
+        schema = self.get_prompt_template(action)
+        if not schema:
+            return None
+        # Example prompt format (can be refined as needed):
+        prompt = (
+            f"You are an instruction parser.\n"
+            f"Supported action: {action}\n"
+            f"Description: {schema.get('description', '')}\n"
+            f"Parameters: {', '.join(schema.get('params', []))}\n"
+            f"\nUser input: {user_input}\n"
+            f"Parameters provided: {params}\n"
+            f"Respond with a structured JSON intent."
+        )
+        return prompt
+
+    def example_prompt(self) -> str:
+        """
+        Output an example prompt for testing/debugging using the first available action.
+        """
+        actions = self.registry.get_supported_actions()
+        if not actions:
+            return "No actions available in registry."
+        action = actions[0]
+        schema = self.get_prompt_template(action)
+        params = {p: f"example_{p}" for p in schema.get('params', [])}
+        user_input = f"Example user input for action '{action}'"
+        return self.build_prompt(action, params, user_input)

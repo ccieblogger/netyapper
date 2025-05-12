@@ -36,30 +36,45 @@ git clone https://github.com/YOUR_ORG/llm-mcp-interface.git
 cd llm-mcp-interface
 ```
 
-### 2. Set up Backend (FastAPI)
+### 2. Set up Backend (FastAPI) with Poetry
 
 ```bash
 cd app
 python -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload
+pip install poetry
+poetry install
+poetry run uvicorn main:app --reload
 ```
 
-### 3. Set up Web Frontend
+### 3. Run with Docker Compose (Recommended for Dev)
 
 ```bash
-cd web
-npm install
-npm run dev
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-### 4. Run CLI Interface
+- FastAPI app: http://localhost:8000
+- PostgreSQL: localhost:5432 (user: postgres, password: postgres, db: netraven)
+- Ollama: http://localhost:11434 (optional)
 
+### 4. CLI Usage
+
+#### Direct Python
 ```bash
 cd cli
 python query.py "What interfaces are on router R1?"
 ```
+
+#### With Docker Compose
+```bash
+docker compose -f docker-compose.dev.yml run --rm app python cli/query.py "What interfaces are on router R1?"
+```
+
+---
+
+## ⚙️ Environment Variables
+
+- `DATABASE_URL` (default: `postgresql://postgres:postgres@db:5432/netraven`)
 
 ---
 
@@ -67,14 +82,11 @@ python query.py "What interfaces are on router R1?"
 
 ```
 app/
-├── api/                # FastAPI routes
+├── main.py             # Entrypoint (FastAPI)
 ├── core/               # LLM adapter, dispatcher
 ├── mcp_clients/        # NetBox, Cisco CLI, etc.
 ├── schemas/            # Pydantic models
-├── templates/          # Prompt templates
-├── cli/                # CLI interfaces
-├── web/                # Web UI (Vue + PrimeVue)
-└── main.py             # Entrypoint
+cli/                    # CLI interfaces
 ```
 
 ---

@@ -92,4 +92,11 @@ Develop a unified Web and CLI application that allows users to interact with net
 
 ---
 
+## [2025-05-12] Implementation Note
+
+- PromptEngine and YAML registry integration are implemented and tested.
+- For developer usage and extension, see `docs/developer/README.md`.
+
+---
+
 Let me know when you'd like to turn this into GitHub issues, CI workflows, or documentation.

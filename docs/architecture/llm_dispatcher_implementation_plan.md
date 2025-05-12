@@ -55,6 +55,22 @@ get_interface_ip:
 
 ---
 
+## [2025-05-12] Workstream 3: Prompt Generator Status
+
+- The PromptEngine (`core/prompt.py`) is now implemented and tested.
+- Prompts are dynamically built from `actions.yaml` using the `PromptEngine`.
+- Example prompt output and unit tests are available (see `core/print_example_prompt.py` and `tests/test_prompt.py`).
+- See `docs/developer/README.md` for developer usage, testing, and extension instructions.
+
+---
+
+## Documentation Note
+
+- The prompt generation and registry integration are now implemented as described in this plan.
+- For up-to-date usage and extension, see the developer README.
+
+---
+
 ## 🔌 Workstream 4: LLM Adapter
 
 **Goal:** Unified access to OpenAI and Ollama

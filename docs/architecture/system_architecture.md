@@ -122,4 +122,9 @@ app/
 
 ---
 
+## [2025-05-12] Implementation Note
+
+- PromptEngine and YAML-driven prompt construction are implemented and tested.
+- See `docs/developer/README.md` for developer usage, testing, and extension instructions.
+
 Let me know when you're ready to review the project specification document.

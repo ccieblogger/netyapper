@@ -126,4 +126,11 @@ class MCPClient:
 
 ---
 
+## [2025-05-12] Prompt Generator Implementation Note
+
+- The PromptEngine is implemented as described, with YAML-driven prompt construction and example output.
+- See `docs/developer/README.md` for developer instructions on prompt and action modification, testing, and environment setup.
+
+---
+
 Next: See Developer Implementation Plan for file structure, initial code, and task breakdown.

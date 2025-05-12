@@ -107,4 +107,10 @@ This revised version focuses initially on building a **CLI-only, end-to-end func
 
 Each phase in this plan should be mapped to a GitHub milestone and tracked as a column or label in the GitHub Project board. Issues should be created per task and linked to milestones to provide visibility and traceability.
 
-Let me know when you'd like to generate GitHub issues or restructure the CLI tooling next.
+---
+
+## [2025-05-12] Developer Note
+
+- PromptEngine and YAML registry are implemented and tested as described.
+- For developer usage, see `docs/developer/README.md`.
+- Example prompt output and tests are available.

@@ -2,6 +2,12 @@
 applyTo: "**"
 ---
 
+## Githug Tool Instructions
+- The current projects github owner is ccieblogger.
+- The current project name is netraven.
+
+# **General Instructions**
+
 ## Always start each chat conversation with "🤖 Hi! I'm Copilot, your IA assistant!"
 
 ### **Project Coding Principles**

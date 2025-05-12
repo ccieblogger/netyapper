@@ -1,0 +1,16 @@
+# actions.yaml
+# Example actions for the ActionRegistry
+
+create_device:
+  description: Create a new device in the system
+  params:
+    - device_name
+    - device_type
+    - location
+  mcp: netbox
+
+delete_device:
+  description: Delete an existing device
+  params:
+    - device_id
+  mcp: netbox

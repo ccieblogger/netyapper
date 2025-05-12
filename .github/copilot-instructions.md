@@ -4,7 +4,7 @@ applyTo: "**"
 
 ## Githug Tool Instructions
 - The current projects github owner is ccieblogger.
-- The current project name is netraven.
+- The current project name is netyapper.
 - when asked to retreive a github issue to work on be sure to set the issue to the "In progress" state.
 - Maintain all developer logs in the github issue comments.
 

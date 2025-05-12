@@ -1,8 +1,10 @@
 [project]
-name = "netraven"
+name = "netyapper"
 version = "0.1.0"
 description = "Baseline FastAPI project with CLI and containers."
-authors = ["ccieblogger <ccieblogger@example.com>"]
+authors = [
+    { name = "ccieblogger", email = "ccieblogger@example.com" }
+]
 requires-python = ">=3.10"
 
 [tool.poetry.dependencies]

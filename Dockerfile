@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM python:3.10-alpine
 
-WORKDIR /app
+WORKDIR /
 
 # Install build dependencies for Poetry and psycopg2
 RUN apk add --no-cache gcc musl-dev postgresql-dev libffi-dev
